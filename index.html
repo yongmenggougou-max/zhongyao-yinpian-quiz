@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中药饮片辨识抽查 · 60味</title>
+<style>
+:root{--paper:#f6efe2;--paper2:#efe4cf;--ink:#2b2118;--ink2:#6b5a45;--red:#a63a2b;--red2:#c2543f;--gold:#b08a3e;--line:#d9c8a8;--card:#fffdf7;--ok:#3a7d44;--warn:#b3541e;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;background-image:radial-gradient(circle at 1px 1px,rgba(160,120,60,.10) 1px,transparent 0);background-size:22px 22px;}
+.wrap{max-width:1180px;margin:0 auto;padding:18px 14px 70px;}
+header{text-align:center;padding:14px 0 4px;}
+header h1{font-family:"STKaiti","KaiTi",serif;font-size:29px;letter-spacing:2px;}
+header .sub{color:var(--ink2);font-size:13px;margin-top:5px;letter-spacing:1px;}
+.seal{display:inline-block;border:2px solid var(--red);color:var(--red);border-radius:4px;padding:0 8px;font-size:12px;margin-left:8px;vertical-align:middle;}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:14px 0;}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 15px;border-radius:8px;cursor:pointer;font-size:14px;transition:.15s;user-select:none;}
+.btn:hover{border-color:var(--gold);}
+.btn.primary{background:var(--red);border-color:var(--red);color:#fff;}
+.btn.primary:hover{background:var(--red2);}
+.btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.btn.small{padding:5px 10px;font-size:13px;}
+.sel{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 10px;border-radius:8px;font-size:14px;outline:none;}
+.stat{font-size:13px;color:var(--ink2);}
+.stat b{color:var(--red);font-size:16px;}
+.stage{display:flex;gap:18px;margin-top:6px;align-items:stretch;}
+@media(max-width:820px){.stage{flex-direction:column;}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 24px rgba(120,90,40,.10);}
+.card.img{flex:1 1 54%;display:flex;flex-direction:column;overflow:hidden;}
+.card.img .imgbox{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-height:340px;background:#fbf7ee;}
+.card.img img{max-width:100%;max-height:500px;border-radius:8px;box-shadow:0 3px 14px rgba(0,0,0,.18);}
+.card.img .seq{text-align:center;color:var(--ink2);font-size:13px;padding:9px;}
+.quicknote{text-align:center;padding:10px 14px 16px;font-size:14px;}
+.quicknote .nm{font-family:"STKaiti","KaiTi",serif;font-size:23px;color:var(--red);}
+.quicknote .cat{color:var(--ink2);font-size:13px;}
+.card.ans{flex:1 1 46%;display:flex;flex-direction:column;padding:18px 18px 14px;}
+.ans h2{font-family:"STKaiti","KaiTi",serif;font-size:21px;margin-bottom:3px;}
+.ans .cat{color:var(--red);font-size:13px;margin-bottom:12px;letter-spacing:1px;}
+.fld{margin-bottom:10px;}
+.fld .k{font-weight:600;color:var(--gold);font-size:13px;letter-spacing:2px;margin-bottom:2px;}
+.fld .k::before{content:"◆ ";font-size:9px;color:var(--red);}
+.fld .v{font-size:15px;}
+.caution .v{color:var(--warn);}
+.guess{display:flex;gap:8px;margin:6px 0 10px;}
+.guess input{flex:1;border:1px solid var(--line);border-radius:8px;padding:10px 13px;font-size:16px;background:#fff;color:var(--ink);outline:none;}
+.guess input:focus{border-color:var(--gold);}
+.hint{font-size:13px;color:var(--ink2);min-height:19px;margin-bottom:4px;}
+.hint.ok{color:var(--ok);font-weight:600;}
+.hint.bad{color:var(--red);font-weight:600;}
+.mark{display:flex;gap:8px;margin:8px 0;}
+.mark .btn{flex:1;}
+.mark .know{border-color:#4d8a55;color:#3a7d44;}
+.mark .dunno{border-color:var(--warn);color:var(--warn);}
+.reveal{padding-top:10px;border-top:1px dashed var(--line);margin-top:6px;}
+@keyframes fade{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+.foot{margin-top:24px;}
+details.block{background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:10px;}
+details.block summary{cursor:pointer;font-family:"STKaiti","KaiTi",serif;font-size:16px;}
+.diff{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;}
+.diff .pair{flex:1 1 240px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;}
+.diff .pair .imgs{display:flex;gap:8px;justify-content:center;}
+.diff .pair img{height:120px;max-width:48%;object-fit:contain;border-radius:6px;border:1px solid var(--line);cursor:pointer;}
+.diff .pair .lbl{font-size:13px;margin-top:6px;}
+.diff .pair .lbl b{color:var(--red);}
+.diff .pair .tip{font-size:12px;color:var(--ink2);margin-top:3px;}
+.appendix{margin-top:8px;font-size:14px;}
+.appendix h4{color:var(--red);margin:8px 0 4px;}
+.credit{text-align:center;color:var(--ink2);font-size:12px;margin-top:16px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>中药饮片辨识 · 随机抽查<span class="seal">六十味</span></h1>
+    <div class="sub">看饮片 · 认中药 · 默背或输入药名 · 错题自动加练</div>
+  </header>
+
+  <div class="toolbar">
+    <button class="btn active" data-mode="random">随机抽查</button>
+    <button class="btn" data-mode="order">顺序浏览</button>
+    <button class="btn" data-mode="wrong">错题本</button>
+    <button class="btn" data-mode="category">分类抽题</button>
+    <select class="sel" id="catSel" style="display:none"></select>
+    <button class="btn" data-mode="quick">快刷</button>
+    <button class="btn" data-mode="exam">考前模拟</button>
+    <span class="stat">｜ 进度 <b id="seen">0</b>/60 · 答对 <b id="correct">0</b> · 错题 <b id="wrongCnt">0</b></span>
+  </div>
+
+  <div class="stage">
+    <div class="card img">
+      <div class="imgbox"><img id="img" src="" alt="饮片图片"></div>
+      <div class="seq" id="seq">第 0 味</div>
+    </div>
+
+    <div class="card ans">
+      <div id="quickNote" class="quicknote" style="display:none">
+        <div class="nm" id="qName"></div><div class="cat" id="qCat"></div>
+        <div id="qNature"></div><div id="qEffect"></div><div id="qUsage"></div>
+      </div>
+
+      <div id="ansWrap">
+        <h2 id="ansName">？</h2>
+        <div class="cat" id="ansCat"></div>
+        <div class="guess">
+          <input id="guessInput" type="text" placeholder="输入药名，回车核对（默背可不填）" autocomplete="off">
+          <button id="btnCheck" class="btn">核对</button>
+        </div>
+        <div class="hint" id="hint"></div>
+        <div class="fld"><div class="k">药性</div><div class="v" id="ansNature"></div></div>
+        <div class="fld"><div class="k">功效</div><div class="v" id="ansEffect"></div></div>
+        <div class="fld"><div class="k">用法用量</div><div class="v" id="ansUsage"></div></div>
+        <div class="fld caution" id="cautionFld"><div class="k">注意事项</div><div class="v" id="ansCaution"></div></div>
+
+        <div class="mark" id="markBar" style="display:none">
+          <button class="btn small know" id="btnKnow">✓ 会了</button>
+          <button class="btn small dunno" id="btnDunno">✗ 没记住</button>
+        </div>
+
+        <div class="reveal">
+          <button class="btn primary" style="width:100%" id="btnShowAns">显示答案</button>
+        </div>
+      </div>
+
+      <div id="examWrap" style="display:none">
+        <div class="guess">
+          <input id="examInput" type="text" placeholder="先默背，想好了可输入核对" autocomplete="off">
+          <button class="btn" id="btnExamCheck">核对</button>
+        </div>
+        <div class="hint" id="examHint"></div>
+        <button class="btn primary" style="width:100%" id="btnExamReveal">看答案</button>
+        <div id="examAns" style="display:none;margin-top:10px">
+          <h2 id="eName"></h2><div class="cat" id="eCat"></div>
+          <div class="fld"><div class="k">药性</div><div class="v" id="eNature"></div></div>
+          <div class="fld"><div class="k">功效</div><div class="v" id="eEffect"></div></div>
+          <div class="fld"><div class="k">用法用量</div><div class="v" id="eUsage"></div></div>
+          <div class="fld caution"><div class="k">注意事项</div><div class="v" id="eCaution"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <details class="block">
+      <summary>易混对比（孪生药）</summary>
+      <div class="diff" id="diffBox"></div>
+    </details>
+    <details class="block">
+      <summary>附 · 十八反 / 十九畏（结业考）</summary>
+      <div class="appendix">
+        <h4>“十八反”</h4>
+        <p>本草明言十八反，半蒌贝蔹芨攻乌。藻戟遂芫俱战草，诸参辛芍叛藜芦。</p>
+        <p>（甘草反甘遂、大戟、芫花、海藻；乌头〔川乌、草乌、附子〕反贝母〔川贝母、浙贝母〕、瓜蒌〔瓜蒌皮、瓜蒌仁、天花粉〕、半夏、白蔹、白及；藜芦反人参、丹参、沙参、玄参、苦参、细辛、芍药。）</p>
+        <h4>“十九畏”</h4>
+        <p>硫磺畏朴硝，水银畏砒霜，狼毒畏密陀僧，巴豆畏牵牛，丁香畏郁金，川乌、草乌畏犀角，牙硝畏三棱，官桂畏石脂，人参畏五灵脂。</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="credit">数据来源：《60味需要辨认饮片_更新.pdf》 · 学习进度存于本浏览器 · 错题自动加练</div>
+</div>
+
+<script>
+const ITEMS = [{"name": "防风", "category": "发散风寒药", "nature": "辛、甘，微温。归膀胱、肝、脾经。", "effect": "祛风解表，胜湿止痛，止痉。", "usage": "5～10g。", "caution": "", "aliases": ["关防风", "屏风"]}, {"name": "柴胡", "category": "发散风热药", "nature": "辛、苦，微寒。归肝、胆、肺经。", "effect": "疏散退热，疏肝解郁，升举阳气。", "usage": "3～10g。", "caution": "大叶柴胡 Bupleurum longiradiatum Turcz.的干燥根茎，表面密生环节，有毒，不可当柴胡用。", "aliases": ["北柴胡"]}, {"name": "葛根", "category": "发散风热药", "nature": "甘、辛，凉。归脾、胃、肺经。", "effect": "解肌退热，生津止渴，透疹，升阳止泻，通经活络，解酒毒。", "usage": "10～15g。", "caution": "", "aliases": ["粉葛", "干葛"]}, {"name": "知母", "category": "清热泻火药", "nature": "苦、甘，寒。归肺、胃、肾经。", "effect": "清热泻火，滋阴润燥。", "usage": "6～12g。", "caution": "", "aliases": []}, {"name": "栀子", "category": "清热泻火药", "nature": "苦，寒。归心、肺、三焦经。", "effect": "泻火除烦，清热利湿，凉血解毒；外用消肿止痛。", "usage": "6～10g。外用生品适量，研末调敷。", "caution": "", "aliases": ["山栀", "山栀子", "黄栀子"]}, {"name": "夏枯草", "category": "清热泻火药", "nature": "辛、苦，寒。归肝、胆经。", "effect": "清肝泻火，明目，散结消肿。", "usage": "9～15g。", "caution": "", "aliases": []}, {"name": "黄芩", "category": "清热燥湿药", "nature": "苦，寒。归肺、胆、脾、大肠、小肠经。", "effect": "清热燥湿，泻火解毒，止血，安胎。", "usage": "3～10g。", "caution": "", "aliases": ["条芩", "枯芩", "子芩"]}, {"name": "黄柏", "category": "清热燥湿药", "nature": "苦，寒。归肾、膀胱经。", "effect": "清热燥湿，泻火除蒸，解毒疗疮。", "usage": "3～12g。外用适量。", "caution": "", "aliases": ["黄檗", "川黄柏"]}, {"name": "蒲公英", "category": "清热解毒药", "nature": "苦、甘，寒。归肝、胃经。", "effect": "清热解毒，消肿散结，利尿通淋。", "usage": "10～15g。", "caution": "", "aliases": ["公英", "黄花地丁"]}, {"name": "白花蛇舌草", "category": "清热解毒药", "nature": "甘、淡，凉。归胃、大肠、小肠经。", "effect": "清热解毒，消肿止痛。", "usage": "9～15g。", "caution": "", "aliases": ["蛇舌草"]}, {"name": "生地黄", "category": "清热凉血药", "nature": "甘，寒。归心、肝、肾经。", "effect": "清热凉血，养阴生津。", "usage": "10～15g。", "caution": "", "aliases": ["生地", "干地黄"]}, {"name": "玄参", "category": "清热凉血药", "nature": "甘、苦、咸，微寒。归肺、胃、肾经。", "effect": "清热凉血，滋阴降火，解毒散结。", "usage": "9～15g。", "caution": "不宜与藜芦同用。", "aliases": ["元参", "黑参"]}, {"name": "牡丹皮", "category": "清热凉血药", "nature": "苦、辛，微寒。归心、肝、肾经。", "effect": "清热凉血，活血化瘀。", "usage": "6～12g。", "caution": "孕妇慎用。", "aliases": ["丹皮"]}, {"name": "赤芍", "category": "清热凉血药", "nature": "苦，微寒。归肝经。", "effect": "清热凉血，散瘀止痛。", "usage": "6～12g。", "caution": "不宜与藜芦同用。", "aliases": ["赤芍药"]}, {"name": "苍术", "category": "化湿药", "nature": "辛、苦，温。归脾、胃、肝经。", "effect": "燥湿健脾，祛风散寒，明目。", "usage": "3～9g。", "caution": "", "aliases": ["茅苍术"]}, {"name": "厚朴", "category": "化湿药", "nature": "苦、辛，温。归脾、胃、肺、大肠经。", "effect": "燥湿消痰，下气除满。", "usage": "3～10g。", "caution": "", "aliases": ["川朴"]}, {"name": "砂仁", "category": "化湿药", "nature": "辛，温。归脾、胃、肾经。", "effect": "化湿开胃，温脾止泻，理气安胎。", "usage": "3～6g，后下。", "caution": "", "aliases": ["缩砂仁", "春砂仁"]}, {"name": "茯苓", "category": "利水消肿药", "nature": "甘、淡，平。归心、肺、脾、肾经。", "effect": "利水渗湿，健脾，宁心。", "usage": "10～15g。", "caution": "", "aliases": ["云苓", "白茯苓"]}, {"name": "薏苡仁", "category": "利水消肿药", "nature": "甘、淡，凉。归脾、胃、肺经。", "effect": "利水渗湿，健脾止泻，除痹，排脓，解毒散结。", "usage": "9～30g。", "caution": "孕妇慎用。", "aliases": ["薏米", "薏仁", "苡仁"]}, {"name": "泽泻", "category": "利水消肿药", "nature": "甘，淡、寒。归肾、膀胱经。", "effect": "利水渗湿，泄热，化浊降脂。", "usage": "6～10g。", "caution": "", "aliases": []}, {"name": "吴茱萸", "category": "温里药", "nature": "辛、苦，热；有小毒。归肝、脾、胃、肾经。", "effect": "散寒止痛，降逆止呕，助阳止泻。", "usage": "2～5g。外用适量。", "caution": "", "aliases": ["吴萸"]}, {"name": "陈皮", "category": "理气药", "nature": "苦、辛，温。归肺、脾经。", "effect": "理气健脾，燥湿化痰。", "usage": "3～10g。", "caution": "", "aliases": ["橘皮", "广陈皮"]}, {"name": "香附", "category": "理气药", "nature": "辛、微苦、微甘、平。归肝、脾、三焦经。", "effect": "疏肝解郁，理气宽中，调经止痛。", "usage": "6～9g。", "caution": "", "aliases": ["香附子"]}, {"name": "佛手", "category": "理气药", "nature": "辛、苦、酸、温，归肝、脾、胃、肺经。", "effect": "疏肝理气，和胃止痛，燥湿化痰。", "usage": "3～10g。", "caution": "", "aliases": ["佛手柑"]}, {"name": "玫瑰花", "category": "理气药", "nature": "甘、微苦，温。归肝、脾经。", "effect": "行气解郁，和血，止痛。", "usage": "3～6g。", "caution": "", "aliases": []}, {"name": "麦芽", "category": "消食药", "nature": "甘，平。归脾、胃经。", "effect": "行气消食，健胃开胃，回乳消胀。生麦芽健脾和胃，疏肝行气。炒麦芽行气消食回乳。焦麦芽消食化滞。", "usage": "10～15g，回乳炒用60g。", "caution": "", "aliases": []}, {"name": "鸡内金", "category": "消食药", "nature": "甘，平。归脾、胃、小肠、膀胱经。", "effect": "消食健胃，涩精止遗，通淋化石。", "usage": "3～10g。", "caution": "", "aliases": ["鸡胵皮"]}, {"name": "川芎", "category": "活血止痛药", "nature": "辛，温。归肝、胆、心包经。", "effect": "活血行气，祛风止痛。", "usage": "3～10g。", "caution": "", "aliases": ["芎䓖"]}, {"name": "延胡索", "category": "活血止痛药", "nature": "辛、苦，温。归肝、脾经。", "effect": "活血，行气，止痛。", "usage": "3～10g。研末吞服，一次1.5～3g。", "caution": "", "aliases": ["元胡", "玄胡索", "玄胡"]}, {"name": "郁金", "category": "活血止痛药", "nature": "辛、苦，寒。归肝、心、肺经。", "effect": "活血止痛，行气解郁，清心凉血，利胆退黄。", "usage": "3～10g。", "caution": "不宜与丁香、母丁香同用。", "aliases": []}, {"name": "丹参", "category": "活血调经药", "nature": "苦，微寒。归心、肝经。", "effect": "活血祛瘀，通经止痛，清心除烦，凉血消痈。", "usage": "10～15g。", "caution": "不宜与藜芦同用。", "aliases": []}, {"name": "桃仁", "category": "活血调经药", "nature": "苦、甘，平。归心、肝、大肠经。", "effect": "活血祛瘀，润肠通便，止咳平喘。", "usage": "5～10g，捣碎用。", "caution": "孕妇慎用。", "aliases": []}, {"name": "牛膝", "category": "活血调经药", "nature": "苦、甘、酸。归肝、肾经。", "effect": "逐瘀通经，补肝肾，强筋骨，利尿通淋，引血下行。", "usage": "5～12g。", "caution": "孕妇慎用。", "aliases": ["怀牛膝", "川牛膝"]}, {"name": "鸡血藤", "category": "活血调经药", "nature": "苦、甘，温。归肝、肾经。", "effect": "活血补血，调经止痛，舒筋活络。", "usage": "9～15g。", "caution": "", "aliases": []}, {"name": "莪术", "category": "破血消癥药", "nature": "辛、苦，温。归肝、脾经。", "effect": "行气破血，消积止痛。", "usage": "6～9g。", "caution": "孕妇禁用。", "aliases": ["蓬莪术"]}, {"name": "半夏", "category": "温化寒痰药", "nature": "辛，温。有毒。归脾、胃、肺经。", "effect": "燥湿化痰，降逆止呕，消痞散结；外治痈肿痰核。", "usage": "内服一般炮制后使用，3～9g。外用适量，磨汁涂或研末以酒调敷患处。", "caution": "不宜与川乌、制川乌、草乌、制草乌、附子同用；生品内服宜慎。", "aliases": []}, {"name": "浙贝母", "category": "清化热痰药", "nature": "苦，寒。归肺、心经。", "effect": "清热化痰止咳，解毒散结消痈。", "usage": "5～10g。", "caution": "不宜与川乌、制川乌、草乌、制草乌、附子同用。", "aliases": ["浙贝", "大贝", "象贝"]}, {"name": "桔梗", "category": "清化热痰药", "nature": "苦、辛，平。归肺经。", "effect": "宣肺，祛痰，利咽，排脓。", "usage": "3～10g。", "caution": "", "aliases": []}, {"name": "苦杏仁", "category": "止咳平喘药", "nature": "苦，微温。有小毒。归肺、大肠经。", "effect": "降气止咳平喘，润肠通便。", "usage": "5～10g，生品入煎剂后下。用时捣碎。", "caution": "内服不宜过量，以免中毒。", "aliases": ["杏仁"]}, {"name": "酸枣仁", "category": "养心安神药", "nature": "甘、酸，平。归心、肝、胆经。", "effect": "养心补肝，宁心安神，敛汗，生津。", "usage": "10～15g。用时捣碎。", "caution": "", "aliases": ["枣仁", "山枣仁"]}, {"name": "首乌藤", "category": "养心安神药", "nature": "甘，平。归心、肝经。", "effect": "养血安神，祛风通络。", "usage": "9～15g。外用适量，煎水洗患处。", "caution": "", "aliases": ["夜交藤"]}, {"name": "合欢皮", "category": "养心安神药", "nature": "甘，平。归心、肝、肺经。", "effect": "解郁安神，活血消肿。", "usage": "6～12g。外用适量，研末调敷。", "caution": "", "aliases": []}, {"name": "远志", "category": "养心安神药", "nature": "苦、辛，温。归心、肾、肺经。", "effect": "安神益智，交通心肾，祛痰，消肿。", "usage": "3～10g。", "caution": "", "aliases": []}, {"name": "钩藤", "category": "息风止痉药", "nature": "甘，凉。归肝、心包经。", "effect": "息风定惊，清热平肝。", "usage": "3～12g，后下。", "caution": "", "aliases": ["双钩藤"]}, {"name": "太子参", "category": "补气药", "nature": "甘、微苦、平。归脾、肺经。", "effect": "益气健脾，生津润肺。", "usage": "9～30g。", "caution": "", "aliases": ["孩儿参"]}, {"name": "黄芪", "category": "补气药", "nature": "甘，微温。归肺、脾经。", "effect": "补气升阳，固表止汗，利水消肿，生津养血，行滞通痹，托毒排脓，敛疮生肌。", "usage": "9～30g。", "caution": "", "aliases": ["北芪", "绵芪"]}, {"name": "党参", "category": "补气药", "nature": "甘，平。归脾、肺经。", "effect": "健脾益肺，养血生津。", "usage": "9～30g。", "caution": "不宜与藜芦同用。", "aliases": ["潞党参"]}, {"name": "白术", "category": "补气药", "nature": "苦、甘，温。归脾、胃经。", "effect": "健脾益气，燥湿利水，止汗，安胎。", "usage": "6～12g。", "caution": "", "aliases": ["于术"]}, {"name": "山药", "category": "补气药", "nature": "甘，平。归脾、肺、肾经。", "effect": "补脾养胃，生津益肺，补肾涩精。", "usage": "15～30g。麸炒可增强补脾健胃作用。", "caution": "", "aliases": ["淮山", "怀山药", "薯蓣"]}, {"name": "甘草", "category": "补气药", "nature": "甘，平。归心、肺、脾、胃经。", "effect": "补脾益气，清热解毒，祛痰止咳，缓急止痛，调和诸药。", "usage": "2～10g。", "caution": "不宜与海藻、京大戟、红大戟、甘遂、芫花同用。", "aliases": ["国老", "甜草"]}, {"name": "杜仲", "category": "补阳药", "nature": "甘，温。归肝、肾经。", "effect": "补肝肾，强筋骨，安胎。", "usage": "6～10g。", "caution": "", "aliases": []}, {"name": "菟丝子", "category": "补阳药", "nature": "辛、甘，平。归肝、肾、脾经。", "effect": "补益肝肾，固精缩尿，安胎，明目，止泻；外用消风祛斑。", "usage": "6～12g。外用适量。", "caution": "", "aliases": ["菟丝"]}, {"name": "当归", "category": "补血药", "nature": "甘、辛，温。归肝、心、脾经。", "effect": "补血活血，调经止痛，润肠通便。", "usage": "6～12g。", "caution": "", "aliases": ["秦归", "云归"]}, {"name": "熟地黄", "category": "补血药", "nature": "甘，微温。归肝、肾经。", "effect": "补血滋阴，益精填髓。", "usage": "9～15g。", "caution": "", "aliases": ["熟地"]}, {"name": "白芍", "category": "补血药", "nature": "苦、酸，微寒。归肝、脾经。", "effect": "养血调经，敛阴止汗，柔肝止痛，平抑肝阳。", "usage": "6～15g。", "caution": "不宜与藜芦同用。", "aliases": ["白芍药"]}, {"name": "麦冬", "category": "补阴药", "nature": "甘、微苦，微寒。归心、肺、胃经。", "effect": "养阴生津，润肺清心。", "usage": "6～12g。", "caution": "", "aliases": ["麦门冬"]}, {"name": "黄精", "category": "补阴药", "nature": "甘，平。归脾、肺、肾经。", "effect": "补气养阴，健脾，润肺，益肾。", "usage": "9～15g。", "caution": "", "aliases": []}, {"name": "枸杞子", "category": "补阴药", "nature": "甘，平。归肝、肾经。", "effect": "滋补肝肾，益精明目。", "usage": "6～12g。", "caution": "", "aliases": ["枸杞", "杞子"]}, {"name": "女贞子", "category": "补阴药", "nature": "甘、苦，凉。归肝、肾经。", "effect": "滋补肝肾，明目乌发。", "usage": "6～12g。", "caution": "", "aliases": ["女贞"]}, {"name": "五味子", "category": "固表止汗药", "nature": "酸、甘，温。归肺、心、肾经。", "effect": "收敛固涩，益气生津，补肾宁心。", "usage": "2～6g。", "caution": "", "aliases": ["北五味子"]}];
+const PAIRS = [[10, 53, "生地凉血生津　/　熟地补血填精"], [14, 47, "苍术燥湿祛风　/　白术健脾益气"], [12, 13, "丹皮活血化瘀　/　赤芍散瘀止痛"], [6, 7, "黄芩清热安胎　/　黄柏燥湿退蒸"]];
+const CATS = ["发散风寒药", "发散风热药", "清热泻火药", "清热燥湿药", "清热解毒药", "清热凉血药", "化湿药", "利水消肿药", "温里药", "理气药", "消食药", "活血止痛药", "活血调经药", "破血消癥药", "温化寒痰药", "清化热痰药", "止咳平喘药", "养心安神药", "息风止痉药", "补气药", "补阳药", "补血药", "补阴药", "固表止汗药"];
+
+const $ = id => document.getElementById(id);
+const LS = "yc_quiz_v2";
+let S = (()=>{try{const j=localStorage.getItem(LS);if(j)return JSON.parse(j);}catch(e){}return {wrong:{},streak:{},correct:0,seen:0,seenSet:{}};})();
+function save(){try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}}
+
+let mode='random', cur=-1, catIdx=0;
+const order = ITEMS.map((_,i)=>i);
+
+function norm(s){return String(s||'').replace(/[\s\u3000·\.、，。]/g,'').toLowerCase();}
+function matches(v,it){const q=norm(v);if(!q)return false;return [it.name,...(it.aliases||[])].some(n=>norm(n)===q);}
+
+function wrongList(){return order.filter(i=>S.wrong[i]);}
+function normalList(){return order.filter(i=>!S.wrong[i]);}
+function catList(c){return order.filter(i=>ITEMS[i].category===c);}
+function uniform(pool){return pool[(Math.random()*pool.length)|0];}
+function preferUnseen(pool){const u=pool.filter(i=>!S.seenSet[i]);return u.length?u[(Math.random()*u.length)|0]:pool[(Math.random()*pool.length)|0];}
+
+function pick(){
+  if(mode==='order'||mode==='quick'){ cur=(cur<0?0:cur+1); if(cur>=60)cur=0; return cur; }
+  if(mode==='wrong'){ const w=wrongList(); return w.length?uniform(w):-1; }
+  if(mode==='category'){ const c=catList(CATS[catIdx]); return c.length?uniform(c):-1; }
+  if(mode==='exam'){ return preferUnseen(order); }
+  const w=wrongList(), n=normalList();
+  if(w.length && Math.random()<0.7){ return uniform(w); }
+  if(n.length) return preferUnseen(n);
+  return uniform(order);
+}
+
+function renderStats(){ $('seen').textContent=S.seen; $('correct').textContent=S.correct; $('wrongCnt').textContent=wrongList().length; }
+function resetSession(){ S.seen=0; S.correct=0; S.seenSet={}; renderStats(); }
+
+function show(i){
+  if(i<0){ if(mode==='wrong'){alert('暂无错题，先去随机抽查答错几道吧');} return; }
+  cur=i;
+  const it=ITEMS[i];
+  $('img').src='images/item_'+String(i+1).padStart(2,'0')+'.jpg';
+  $('seq').textContent='第 '+(i+1)+' 味'+(S.wrong[i]?' · 错题':'');
+
+  const q = mode==='quick', x = mode==='exam';
+  $('quickNote').style.display = q?'block':'none';
+  $('ansWrap').style.display = (q||x)?'none':'block';
+  $('examWrap').style.display = x?'block':'none';
+
+  $('ansName').textContent='？'; $('ansCat').textContent='';
+  $('ansNature').textContent=''; $('ansEffect').textContent=''; $('ansUsage').textContent=''; $('ansCaution').textContent='';
+  $('cautionFld').style.display='none';
+  $('guessInput').value=''; $('hint').textContent=''; $('hint').className='hint';
+  $('markBar').style.display='none';
+  $('btnShowAns').style.display='inline-block';
+
+  $('qName').textContent=it.name; $('qCat').textContent=it.category;
+  $('qNature').textContent='药性：'+it.nature; $('qEffect').textContent='功效：'+it.effect; $('qUsage').textContent='用法用量：'+it.usage;
+
+  $('examInput').value=''; $('examHint').textContent=''; $('examHint').className='hint';
+  $('examAns').style.display='none';
+  $('eName').textContent=''; $('eCat').textContent=''; $('eNature').textContent=''; $('eEffect').textContent=''; $('eUsage').textContent=''; $('eCaution').textContent='';
+
+  if(!S.seenSet[i]){ S.seenSet[i]=1; S.seen++; }
+  renderStats(); save();
+  if(mode!=='quick') $('guessInput').focus();
+}
+
+function fillAns(el, it){
+  $(el+'Name').textContent=it.name; $(el+'Cat').textContent=it.category;
+  $(el+'Nature').textContent=it.nature; $(el+'Effect').textContent=it.effect; $(el+'Usage').textContent=it.usage;
+  $(el+'Caution').textContent=it.caution||'无';
+}
+function markCorrect(i){ S.wrong[i]=0; S.streak[i]=(S.streak[i]||0)+1; S.correct++; save(); renderStats(); }
+function markWrong(i){ S.wrong[i]=1; S.streak[i]=0; save(); renderStats(); }
+
+document.querySelectorAll('[data-mode]').forEach(b=>{
+  b.onclick=()=>{
+    mode=b.dataset.mode;
+    document.querySelectorAll('[data-mode]').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    $('catSel').style.display = mode==='category'?'inline-block':'none';
+    if(mode==='order'||mode==='quick') cur=-1;
+    if(mode==='category'){ catIdx=0; $('catSel').selectedIndex=0; }
+    resetSession();
+    const i=pick(); if(i>=0) show(i);
+  };
+});
+
+CATS.forEach(c=>{const o=document.createElement('option');o.textContent=c;$('catSel').appendChild(o);});
+$('catSel').onchange=e=>{catIdx=e.target.selectedIndex; resetSession(); const i=pick(); if(i>=0) show(i);};
+
+$('btnCheck').onclick=()=>{
+  const it=ITEMS[cur]; const v=$('guessInput').value.trim();
+  if(!v){ $('hint').textContent='请先输入药名'; $('hint').className='hint bad'; return; }
+  if(matches(v,it)){ $('hint').textContent='✔ 答对了！是「'+it.name+'」'; $('hint').className='hint ok'; markCorrect(cur); }
+  else { $('hint').textContent='✘ 不对，再想想'; $('hint').className='hint bad'; markWrong(cur); }
+};
+$('guessInput').addEventListener('keydown',e=>{ if(e.key==='Enter')$('btnCheck').click(); });
+
+$('btnShowAns').onclick=()=>{ fillAns('ans', ITEMS[cur]); $('cautionFld').style.display=''; $('markBar').style.display='flex'; $('btnShowAns').style.display='none'; };
+$('btnKnow').onclick=()=>{ markCorrect(cur); $('hint').textContent='✔ 已标记「会了」'; $('hint').className='hint ok'; };
+$('btnDunno').onclick=()=>{ markWrong(cur); $('hint').textContent='✘ 已标记「没记住」，会加练'; $('hint').className='hint bad'; };
+
+$('btnExamCheck').onclick=()=>{
+  const it=ITEMS[cur]; const v=$('examInput').value.trim();
+  if(!v){ $('examHint').textContent='请先输入'; $('examHint').className='hint bad'; return; }
+  if(matches(v,it)){ $('examHint').textContent='✔ 正确！'; $('examHint').className='hint ok'; markCorrect(cur); }
+  else { $('examHint').textContent='✘ 不对'; $('examHint').className='hint bad'; markWrong(cur); }
+};
+$('btnExamReveal').onclick=()=>{ fillAns('e', ITEMS[cur]); $('examAns').style.display='block'; };
+
+document.addEventListener('keydown',e=>{
+  const tag=(e.target.tagName||'').toLowerCase();
+  if(tag==='input'||tag==='select') return;
+  if(e.key===' '||e.key==='n'||e.key==='N'||e.key==='ArrowRight'){ e.preventDefault(); const i=pick(); if(i>=0)show(i); }
+  else if(e.key==='ArrowLeft'){ if(mode==='order'||mode==='quick'){ cur=(cur<=0?59:cur-1); show(cur);} }
+  else if(e.key==='r'||e.key==='R'){ (mode==='exam'?$('btnExamReveal'):$('btnShowAns')).click(); }
+});
+
+(function(){
+  const nb=document.createElement('button'); nb.className='btn primary'; nb.textContent='下一张 →';
+  nb.onclick=()=>{ const i=pick(); if(i>=0)show(i); };
+  document.querySelector('.toolbar').appendChild(nb);
+})();
+
+(function(){
+  const box=$('diffBox');
+  PAIRS.forEach(p=>{
+    const a=ITEMS[p[0]], b=ITEMS[p[1]];
+    const d=document.createElement('div'); d.className='pair';
+    d.innerHTML='<div class="imgs">'
+      +'<img src="images/item_'+String(p[0]+1).padStart(2,'0')+'.jpg" data-i="'+p[0]+'" title="'+a.name+'">'
+      +'<img src="images/item_'+String(p[1]+1).padStart(2,'0')+'.jpg" data-i="'+p[1]+'" title="'+b.name+'">'
+      +'</div><div class="lbl"><b>'+a.name+'</b> vs <b>'+b.name+'</b></div><div class="tip">'+p[2]+'</div>';
+    d.querySelectorAll('img').forEach(im=>{ im.onclick=()=>show(+im.dataset.i); });
+    box.appendChild(d);
+  });
+})();
+
+$('img').onclick=()=>{ if(mode==='quick'||mode==='exam'){ const i=pick(); if(i>=0)show(i); } };
+
+resetSession();
+const first=pick(); if(first>=0) show(first);
+</script>
+</body>
+</html>
