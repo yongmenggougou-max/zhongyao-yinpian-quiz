@@ -2,46 +2,68 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>中药饮片辨识抽查 · 60味</title>
 <style>
 :root{--paper:#f6efe2;--paper2:#efe4cf;--ink:#2b2118;--ink2:#6b5a45;--red:#a63a2b;--red2:#c2543f;--gold:#b08a3e;--line:#d9c8a8;--card:#fffdf7;--ok:#3a7d44;--warn:#b3541e;}
 *{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
 body{font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;background-image:radial-gradient(circle at 1px 1px,rgba(160,120,60,.10) 1px,transparent 0);background-size:22px 22px;}
-.wrap{max-width:1120px;margin:0 auto;padding:12px 12px 40px;}
-header{text-align:center;padding:8px 0 2px;}
-header h1{font-family:"STKaiti","KaiTi",serif;font-size:24px;letter-spacing:2px;}
-header .sub{color:var(--ink2);font-size:12px;margin-top:3px;letter-spacing:1px;}
-.seal{display:inline-block;border:2px solid var(--red);color:var(--red);border-radius:4px;padding:0 7px;font-size:11px;margin-left:6px;vertical-align:middle;}
-.toolbar{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;margin:8px 0;}
+.wrap{height:100dvh;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;padding:8px 10px 8px;}
+
+/* 顶栏 */
+header{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:2px 0 6px;}
+header h1{font-family:"STKaiti","KaiTi",serif;font-size:22px;letter-spacing:1px;flex:1;text-align:center;}
+.seal{display:inline-block;border:2px solid var(--red);color:var(--red);border-radius:4px;padding:0 6px;font-size:11px;margin-left:5px;vertical-align:middle;}
+.menu-btn{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 12px;border-radius:7px;cursor:pointer;font-size:15px;line-height:1;}
+
+/* 抽屉（模式选项） */
+.drawer{flex-shrink:0;background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-bottom:6px;display:none;}
+.mode-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;}
 .btn{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 12px;border-radius:7px;cursor:pointer;font-size:13px;transition:.15s;user-select:none;}
 .btn:hover{border-color:var(--gold);}
-.btn.primary{background:var(--red);border-color:var(--red);color:#fff;}
-.btn.primary:hover{background:var(--red2);}
 .btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
-.btn.small{padding:4px 9px;font-size:12px;}
-.sel{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 8px;border-radius:7px;font-size:13px;outline:none;}
-.stat{font-size:12px;color:var(--ink2);}
+.sel{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 8px;border-radius:7px;font-size:13px;outline:none;display:none;}
+.stat{font-size:12px;color:var(--ink2);margin-top:6px;text-align:center;}
 .stat b{color:var(--red);font-size:14px;}
-.stage{display:flex;gap:12px;margin-top:4px;align-items:stretch;}
+
+/* 主体：图 + 答案 */
+.stage{flex:1;min-height:0;display:flex;gap:10px;}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 5px 20px rgba(120,90,40,.10);}
-.card.img{flex:1 1 52%;display:flex;flex-direction:column;overflow:hidden;}
-.card.img .imgbox{flex:1;display:flex;align-items:center;justify-content:center;padding:10px;min-height:260px;background:#fbf7ee;}
-.card.img img{max-width:100%;max-height:420px;border-radius:8px;box-shadow:0 3px 12px rgba(0,0,0,.18);}
-.card.img .seq{text-align:center;color:var(--ink2);font-size:12px;padding:5px;}
-.quicknote{text-align:center;padding:8px 10px 12px;font-size:13px;}
-.quicknote .nm{font-family:"STKaiti","KaiTi",serif;font-size:20px;color:var(--red);}
-.quicknote .cat{color:var(--ink2);font-size:12px;}
-.card.ans{flex:1 1 48%;display:flex;flex-direction:column;padding:12px 14px 10px;}
-.ans h2{font-family:"STKaiti","KaiTi",serif;font-size:19px;margin-bottom:2px;}
-.ans .cat{color:var(--red);font-size:12px;margin-bottom:5px;letter-spacing:1px;}
+.card.img{position:relative;flex:1 1 66%;display:flex;flex-direction:column;overflow:hidden;}
+.card.img .imgbox{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:8px;background:#fbf7ee;}
+.card.img img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:6px;box-shadow:0 3px 12px rgba(0,0,0,.16);}
+.card.img .seq{flex-shrink:0;text-align:center;color:var(--ink2);font-size:12px;padding:4px;}
+
+/* 图片左右翻页箭头 */
+.nav{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:rgba(43,33,24,.45);color:#fff;font-size:22px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:.55;z-index:5;transition:.15s;}
+.nav:hover{opacity:.95;}
+.nav.prev{left:6px;}
+.nav.next{right:6px;}
+
+/* 纯图答案浮层 */
+.pure-overlay{position:absolute;inset:0;background:rgba(255,253,247,.96);padding:14px 16px;overflow:auto;z-index:9;display:none;flex-direction:column;}
+.pure-overlay .pn{font-family:"STKaiti","KaiTi",serif;font-size:24px;color:var(--red);}
+.pure-overlay .pc{color:var(--ink2);font-size:12px;margin:2px 0 8px;}
+.pure-overlay .pf{margin-bottom:6px;}
+.pure-overlay .pk{font-weight:600;color:var(--gold);font-size:12px;letter-spacing:1px;}
+.pure-overlay .pk::before{content:"◆ ";font-size:8px;color:var(--red);}
+.pure-overlay .pv{font-size:14px;line-height:1.5;}
+.pure-overlay .pcau{color:var(--warn);}
+.pure-overlay .pclose{margin-top:10px;font-size:12px;color:var(--ink2);text-align:center;}
+.pure-overlay .pclose-btn{position:absolute;top:10px;right:12px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:16px;cursor:pointer;line-height:1;z-index:10;}
+
+/* 答案卡 */
+.card.ans{flex:1 1 34%;display:flex;flex-direction:column;padding:10px 14px 8px;min-width:0;overflow-y:auto;}
+.ans h2{font-family:"STKaiti","KaiTi",serif;font-size:18px;margin-bottom:2px;}
+.ans .cat{color:var(--red);font-size:12px;margin-bottom:5px;}
 .fld{margin-bottom:5px;}
 .fld .k{font-weight:600;color:var(--gold);font-size:12px;letter-spacing:1px;margin-bottom:1px;}
 .fld .k::before{content:"◆ ";font-size:8px;color:var(--red);}
 .fld .v{font-size:14px;line-height:1.45;}
 .caution .v{color:var(--warn);}
 .guess{display:flex;gap:6px;margin:4px 0 6px;}
-.guess input{flex:1;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font-size:15px;background:#fff;color:var(--ink);outline:none;}
+.guess input{flex:1;min-width:0;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font-size:15px;background:#fff;color:var(--ink);outline:none;}
 .guess input:focus{border-color:var(--gold);}
 .hint{font-size:12px;color:var(--ink2);min-height:16px;margin-bottom:2px;}
 .hint.ok{color:var(--ok);font-weight:600;}
@@ -51,87 +73,77 @@ header .sub{color:var(--ink2);font-size:12px;margin-top:3px;letter-spacing:1px;}
 .mark .know{border-color:#4d8a55;color:#3a7d44;}
 .mark .dunno{border-color:var(--warn);color:var(--warn);}
 .reveal{padding-top:8px;border-top:1px dashed var(--line);margin-top:4px;}
-@keyframes fade{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
-.foot{margin-top:16px;}
-details.block{background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:8px;}
-details.block summary{cursor:pointer;font-family:"STKaiti","KaiTi",serif;font-size:15px;}
+.btn.primary{background:var(--red);border-color:var(--red);color:#fff;}
+.btn.primary:hover{background:var(--red2);}
+.quicknote{font-size:13px;}
+.quicknote .nm{font-family:"STKaiti","KaiTi",serif;font-size:20px;color:var(--red);}
+.quicknote .cat{color:var(--ink2);font-size:12px;}
+
+/* 底部 */
+.foot{flex-shrink:0;margin-top:8px;}
+details.block{background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-bottom:6px;}
+details.block summary{cursor:pointer;font-family:"STKaiti","KaiTi",serif;font-size:14px;}
 .diff{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
-.diff .pair{flex:1 1 230px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;}
+.diff .pair{flex:1 1 200px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;}
 .diff .pair .imgs{display:flex;gap:6px;justify-content:center;}
-.diff .pair img{height:100px;max-width:48%;object-fit:contain;border-radius:6px;border:1px solid var(--line);cursor:pointer;}
+.diff .pair img{height:84px;max-width:48%;object-fit:contain;border-radius:6px;border:1px solid var(--line);cursor:pointer;}
 .diff .pair .lbl{font-size:12px;margin-top:4px;}
 .diff .pair .lbl b{color:var(--red);}
 .diff .pair .tip{font-size:11px;color:var(--ink2);margin-top:2px;}
 .appendix{margin-top:6px;font-size:13px;}
 .appendix h4{color:var(--red);margin:6px 0 3px;}
-.credit{text-align:center;color:var(--ink2);font-size:11px;margin-top:12px;}
+.credit{text-align:center;color:var(--ink2);font-size:11px;margin-top:6px;}
+
+/* 手机：上下排 */
 @media(max-width:820px){
-  .wrap{padding:8px 8px 20px;}
-  header h1{font-size:20px;}
-  header .sub{font-size:11px;margin-top:2px;}
-  .toolbar{margin:6px 0;gap:5px;}
-  .btn{padding:6px 9px;font-size:12px;}
-  .stat{font-size:11px;}
-  .stage{flex-direction:column;gap:8px;margin-top:0;}
-  .card.img .imgbox{min-height:0;padding:6px;}
-  .card.img img{max-height:26vh;border-radius:6px;}
-  .card.img .seq{padding:3px;font-size:11px;}
-  .card.ans{padding:10px 12px 8px;}
-  .ans h2{font-size:18px;}
-  .fld .v{font-size:13px;}
-  .guess input{font-size:14px;padding:7px 10px;}
+  .stage{flex-direction:column;gap:8px;}
+  .card.img{flex:1 1 46%;}
+  .card.img .imgbox{padding:4px;}
+  .card.ans{flex:1 1 54%;}
+  .nav{width:34px;height:34px;font-size:19px;}
+  .foot{display:none;}
 }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>中药饮片辨识 · 随机抽查<span class="seal">六十味</span></h1>
-    <div class="sub">看饮片 · 认中药 · 默背或输入药名 · 错题自动加练</div>
+    <button class="menu-btn" id="btnMenu">☰</button>
+    <h1>中药饮片辨识<span class="seal">60</span></h1>
   </header>
 
-  <details class="block" id="guide">
-    <summary>📖 使用说明（第一次用先看这里）</summary>
-    <div class="appendix">
-      <h4>目标</h4>
-      <p>看饮片图 → 认出药名 → 背下药性 / 功效 / 用法用量 / 注意事项。</p>
-      <h4>基本玩法</h4>
-      <p>① 看左侧饮片图，先默背药名（也可以在输入框里打出来核对）；② 点「核对」判对错，或点「显示答案」看完整答案；③ 答错会自动进「错题池」，之后抽题时 <b>70% 概率优先抽到错题</b>，答对会自动移出。</p>
-      <h4>六种模式</h4>
-      <p>· <b>随机抽查</b>（默认，推荐日常刷）：错题加权随机抽；<br>
-      · <b>顺序浏览</b>：按 1→60 编号过一遍；<br>
-      · <b>错题本</b>：只刷你答错 / 标「没记住」的；<br>
-      · <b>分类抽题</b>：按大类（清热泻火、补血、理气…）单独刷；<br>
-      · <b>快刷</b>：图和答案同屏，快速过一遍建立印象；<br>
-      · <b>考前模拟</b>：只出图、答案藏起，自己默背后再翻。</p>
-      <h4>快捷键</h4>
-      <p>空格 / N / → ：下一张　｜　← ：上一张　｜　R ：显示答案</p>
-      <h4>进度说明</h4>
-      <p>学习进度存在<b>你自己的浏览器</b>里，换设备 / 换浏览器不会同步（各存各的，互不干扰）。</p>
-      <h4>突击建议（1–2 天）</h4>
-      <p>先用「快刷」过一遍 → 再用「随机抽查」刷 → 错题集中用「错题本」攻 → 考前用「考前模拟」。</p>
-      <p>底部还有「易混对比」（4 组孪生药）和「十八反 / 十九畏」，考前记得看。</p>
+  <div class="drawer" id="drawer">
+    <div class="mode-row">
+      <button class="btn active" data-mode="random">随机抽查</button>
+      <button class="btn" data-mode="order">顺序</button>
+      <button class="btn" data-mode="wrong">错题本</button>
+      <button class="btn" data-mode="category">分类</button>
+      <select class="sel" id="catSel"></select>
+      <button class="btn" data-mode="quick">快刷</button>
+      <button class="btn" data-mode="exam">模拟</button>
+      <button class="btn" data-mode="pure">纯图</button>
     </div>
-  </details>
-
-  <div class="toolbar">
-    <button class="btn active" data-mode="random">随机抽查</button>
-    <button class="btn" data-mode="order">顺序浏览</button>
-    <button class="btn" data-mode="wrong">错题本</button>
-    <button class="btn" data-mode="category">分类抽题</button>
-    <select class="sel" id="catSel" style="display:none"></select>
-    <button class="btn" data-mode="quick">快刷</button>
-    <button class="btn" data-mode="exam">考前模拟</button>
-    <span class="stat">｜ 进度 <b id="seen">0</b>/60 · 答对 <b id="correct">0</b> · 错题 <b id="wrongCnt">0</b></span>
+    <div class="stat">进度 <b id="seen">0</b>/60 · 答对 <b id="correct">0</b> · 错题 <b id="wrongCnt">0</b></div>
   </div>
 
   <div class="stage">
-    <div class="card img">
+    <div class="card img" id="imgCard">
       <div class="imgbox"><img id="img" src="" alt="饮片图片"></div>
       <div class="seq" id="seq">第 0 味</div>
+      <button class="nav prev" id="btnPrev">‹</button>
+      <button class="nav next" id="btnNext">›</button>
+      <div class="pure-overlay" id="pureOverlay">
+        <button class="pclose-btn" id="pureClose">✕</button>
+        <div class="pn" id="pureName"></div><div class="pc" id="pureCat"></div>
+        <div class="pf"><div class="pk">药性</div><div class="pv" id="pureNature"></div></div>
+        <div class="pf"><div class="pk">功效</div><div class="pv" id="pureEffect"></div></div>
+        <div class="pf"><div class="pk">用法用量</div><div class="pv" id="pureUsage"></div></div>
+        <div class="pf"><div class="pk">注意事项</div><div class="pv pcau" id="pureCaution"></div></div>
+        <div class="pclose">（点 ✕ 或空白处关闭）</div>
+      </div>
     </div>
 
-    <div class="card ans">
+    <div class="card ans" id="ansCard">
       <div id="quickNote" class="quicknote" style="display:none">
         <div class="nm" id="qName"></div><div class="cat" id="qCat"></div>
         <div id="qNature"></div><div id="qEffect"></div><div id="qUsage"></div>
@@ -141,7 +153,7 @@ details.block summary{cursor:pointer;font-family:"STKaiti","KaiTi",serif;font-si
         <h2 id="ansName">？</h2>
         <div class="cat" id="ansCat"></div>
         <div class="guess">
-          <input id="guessInput" type="text" placeholder="输入药名，回车核对（默背可不填）" autocomplete="off">
+          <input id="guessInput" type="text" placeholder="输入药名，回车核对" autocomplete="off">
           <button id="btnCheck" class="btn">核对</button>
         </div>
         <div class="hint" id="hint"></div>
@@ -151,12 +163,10 @@ details.block summary{cursor:pointer;font-family:"STKaiti","KaiTi",serif;font-si
           <div class="fld"><div class="k">用法用量</div><div class="v" id="ansUsage"></div></div>
           <div class="fld caution" id="cautionFld"><div class="k">注意事项</div><div class="v" id="ansCaution"></div></div>
         </div>
-
         <div class="mark" id="markBar" style="display:none">
           <button class="btn small know" id="btnKnow">✓ 会了</button>
           <button class="btn small dunno" id="btnDunno">✗ 没记住</button>
         </div>
-
         <div class="reveal">
           <button class="btn primary" style="width:100%" id="btnShowAns">显示答案</button>
         </div>
@@ -169,7 +179,7 @@ details.block summary{cursor:pointer;font-family:"STKaiti","KaiTi",serif;font-si
         </div>
         <div class="hint" id="examHint"></div>
         <button class="btn primary" style="width:100%" id="btnExamReveal">看答案</button>
-        <div id="examAns" style="display:none;margin-top:10px">
+        <div id="examAns" style="display:none;margin-top:8px">
           <h2 id="eName"></h2><div class="cat" id="eCat"></div>
           <div class="fld"><div class="k">药性</div><div class="v" id="eNature"></div></div>
           <div class="fld"><div class="k">功效</div><div class="v" id="eEffect"></div></div>
@@ -182,22 +192,34 @@ details.block summary{cursor:pointer;font-family:"STKaiti","KaiTi",serif;font-si
 
   <div class="foot">
     <details class="block">
+      <summary>📖 使用说明</summary>
+      <div class="appendix">
+        <h4>目标</h4><p>看饮片图 → 认出药名 → 背下药性 / 功效 / 用法用量 / 注意事项。</p>
+        <h4>模式</h4>
+        <p>点左上角「☰」选模式：随机抽查（错题加权）、顺序、错题本、分类、快刷、模拟、<b>纯图</b>（只出图、点图显示答案）。</p>
+        <h4>操作</h4>
+        <p>图片左右「‹ ›」翻题；答案卡输入药名核对，或点「显示答案」；答错自动进错题池（70% 优先抽）。</p>
+        <h4>快捷键</h4><p>空格 / N / → 下一张；← 上一张；R 显示答案。</p>
+        <h4>进度</h4><p>存在本浏览器，换设备不互通。</p>
+        <h4>突击建议</h4><p>快刷过一遍 → 随机抽查 → 错题本攻 → 考前模拟。</p>
+      </div>
+    </details>
+    <details class="block">
       <summary>易混对比（孪生药）</summary>
       <div class="diff" id="diffBox"></div>
     </details>
     <details class="block">
-      <summary>附 · 十八反 / 十九畏（结业考）</summary>
+      <summary>附 · 十八反 / 十九畏</summary>
       <div class="appendix">
         <h4>“十八反”</h4>
-        <p>本草明言十八反，半蒌贝蔹芨攻乌。藻戟遂芫俱战草，诸参辛芍叛藜芦。</p>
-        <p>（甘草反甘遂、大戟、芫花、海藻；乌头〔川乌、草乌、附子〕反贝母〔川贝母、浙贝母〕、瓜蒌〔瓜蒌皮、瓜蒌仁、天花粉〕、半夏、白蔹、白及；藜芦反人参、丹参、沙参、玄参、苦参、细辛、芍药。）</p>
+        <p>本草明言十八反，半蒌贝蔹芨攻乌。藻戟遂芫俱战草，诸参辛芍叛藜芦。（甘草反甘遂、大戟、芫花、海藻；乌头〔川乌、草乌、附子〕反贝母〔川贝母、浙贝母〕、瓜蒌、半夏、白蔹、白及；藜芦反人参、丹参、沙参、玄参、苦参、细辛、芍药。）</p>
         <h4>“十九畏”</h4>
         <p>硫磺畏朴硝，水银畏砒霜，狼毒畏密陀僧，巴豆畏牵牛，丁香畏郁金，川乌、草乌畏犀角，牙硝畏三棱，官桂畏石脂，人参畏五灵脂。</p>
       </div>
     </details>
   </div>
 
-  <div class="credit">数据来源：《60味需要辨认饮片_更新.pdf》 · 学习进度存于本浏览器 · 错题自动加练</div>
+  <div class="credit">数据来源：《60味需要辨认饮片_更新.pdf》 · 进度存本浏览器</div>
 </div>
 
 <script>
@@ -206,7 +228,7 @@ const PAIRS = [[10, 53, "生地凉血生津　/　熟地补血填精"], [14, 47,
 const CATS = ["发散风寒药", "发散风热药", "清热泻火药", "清热燥湿药", "清热解毒药", "清热凉血药", "化湿药", "利水消肿药", "温里药", "理气药", "消食药", "活血止痛药", "活血调经药", "破血消癥药", "温化寒痰药", "清化热痰药", "止咳平喘药", "养心安神药", "息风止痉药", "补气药", "补阳药", "补血药", "补阴药", "固表止汗药"];
 
 const $ = id => document.getElementById(id);
-const LS = "yc_quiz_v2";
+const LS = "yc_quiz_v3";
 let S = (()=>{try{const j=localStorage.getItem(LS);if(j)return JSON.parse(j);}catch(e){}return {wrong:{},streak:{},correct:0,seen:0,seenSet:{}};})();
 function save(){try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}}
 
@@ -215,7 +237,6 @@ const order = ITEMS.map((_,i)=>i);
 
 function norm(s){return String(s||'').replace(/[\s\u3000·\.、，。]/g,'').toLowerCase();}
 function matches(v,it){const q=norm(v);if(!q)return false;return [it.name,...(it.aliases||[])].some(n=>norm(n)===q);}
-
 function wrongList(){return order.filter(i=>S.wrong[i]);}
 function normalList(){return order.filter(i=>!S.wrong[i]);}
 function catList(c){return order.filter(i=>ITEMS[i].category===c);}
@@ -226,7 +247,7 @@ function pick(){
   if(mode==='order'||mode==='quick'){ cur=(cur<0?0:cur+1); if(cur>=60)cur=0; return cur; }
   if(mode==='wrong'){ const w=wrongList(); return w.length?uniform(w):-1; }
   if(mode==='category'){ const c=catList(CATS[catIdx]); return c.length?uniform(c):-1; }
-  if(mode==='exam'){ return preferUnseen(order); }
+  if(mode==='exam'||mode==='pure'){ return preferUnseen(order); }
   const w=wrongList(), n=normalList();
   if(w.length && Math.random()<0.7){ return uniform(w); }
   if(n.length) return preferUnseen(n);
@@ -236,6 +257,7 @@ function pick(){
 function renderStats(){ $('seen').textContent=S.seen; $('correct').textContent=S.correct; $('wrongCnt').textContent=wrongList().length; }
 function resetSession(){ S.seen=0; S.correct=0; S.seenSet={}; history=[]; renderStats(); }
 function goBack(){ if(history.length>1){ history.pop(); show(history[history.length-1], false); } }
+function next(){ const i=pick(); if(i>=0) show(i); }
 
 function show(i, record){
   if(i<0){ if(mode==='wrong'){alert('暂无错题，先去随机抽查答错几道吧');} return; }
@@ -245,9 +267,17 @@ function show(i, record){
   $('img').src='images/item_'+String(i+1).padStart(2,'0')+'.jpg';
   $('seq').textContent='第 '+(i+1)+' 味'+(S.wrong[i]?' · 错题':'');
 
-  const q = mode==='quick', x = mode==='exam';
+  const pure = mode==='pure', x = mode==='exam', q = mode==='quick';
+  $('ansCard').style.display = pure?'none':'flex';
+  $('pureOverlay').style.display = 'none';
+
+  // 纯图答案数据预填
+  $('pureName').textContent=it.name; $('pureCat').textContent=it.category;
+  $('pureNature').textContent=it.nature; $('pureEffect').textContent=it.effect; $('pureUsage').textContent=it.usage;
+  $('pureCaution').textContent=it.caution||'无';
+
   $('quickNote').style.display = q?'block':'none';
-  $('ansWrap').style.display = (q||x)?'none':'block';
+  $('ansWrap').style.display = (q||x||pure)?'none':'block';
   $('examWrap').style.display = x?'block':'none';
 
   $('ansName').textContent='？'; $('ansCat').textContent='';
@@ -266,7 +296,7 @@ function show(i, record){
 
   if(!S.seenSet[i]){ S.seenSet[i]=1; S.seen++; }
   renderStats(); save();
-  if(mode!=='quick') $('guessInput').focus();
+  if(mode!=='quick' && mode!=='pure') $('guessInput').focus();
 }
 
 function fillAns(el, it){
@@ -277,6 +307,10 @@ function fillAns(el, it){
 function markCorrect(i){ S.wrong[i]=0; S.streak[i]=(S.streak[i]||0)+1; S.correct++; save(); renderStats(); }
 function markWrong(i){ S.wrong[i]=1; S.streak[i]=0; save(); renderStats(); }
 
+// 抽屉
+$('btnMenu').onclick=()=>{ const d=$('drawer'); d.style.display = (d.style.display==='block')?'none':'block'; };
+
+// 模式
 document.querySelectorAll('[data-mode]').forEach(b=>{
   b.onclick=()=>{
     mode=b.dataset.mode;
@@ -285,14 +319,28 @@ document.querySelectorAll('[data-mode]').forEach(b=>{
     $('catSel').style.display = mode==='category'?'inline-block':'none';
     if(mode==='order'||mode==='quick') cur=-1;
     if(mode==='category'){ catIdx=0; $('catSel').selectedIndex=0; }
+    $('drawer').style.display='none';
     resetSession();
-    const i=pick(); if(i>=0) show(i);
+    next();
   };
 });
 
 CATS.forEach(c=>{const o=document.createElement('option');o.textContent=c;$('catSel').appendChild(o);});
-$('catSel').onchange=e=>{catIdx=e.target.selectedIndex; resetSession(); const i=pick(); if(i>=0) show(i);};
+$('catSel').onchange=e=>{catIdx=e.target.selectedIndex; resetSession(); next();};
 
+// 翻页
+$('btnPrev').onclick=()=>goBack();
+$('btnNext').onclick=()=>next();
+
+// 图片点击：纯图=显隐答案；快刷/模拟=下一张
+$('img').onclick=()=>{
+  if(mode==='pure'){ const o=$('pureOverlay'); o.style.display = o.style.display==='none'?'flex':'none'; }
+  else if(mode==='quick'||mode==='exam'){ next(); }
+};
+$('pureOverlay').onclick=(e)=>{ if(e.target===e.currentTarget){ $('pureOverlay').style.display='none'; } };
+$('pureClose').onclick=()=>{ $('pureOverlay').style.display='none'; };
+
+// 答案卡
 $('btnCheck').onclick=()=>{
   const it=ITEMS[cur]; const v=$('guessInput').value.trim();
   if(!v){ $('hint').textContent='请先输入药名'; $('hint').className='hint bad'; return; }
@@ -300,11 +348,11 @@ $('btnCheck').onclick=()=>{
   else { $('hint').textContent='✘ 不对，再想想'; $('hint').className='hint bad'; markWrong(cur); }
 };
 $('guessInput').addEventListener('keydown',e=>{ if(e.key==='Enter')$('btnCheck').click(); });
-
 $('btnShowAns').onclick=()=>{ fillAns('ans', ITEMS[cur]); $('ansDetail').style.display=''; $('markBar').style.display='flex'; $('btnShowAns').style.display='none'; };
 $('btnKnow').onclick=()=>{ markCorrect(cur); $('hint').textContent='✔ 已标记「会了」'; $('hint').className='hint ok'; };
 $('btnDunno').onclick=()=>{ markWrong(cur); $('hint').textContent='✘ 已标记「没记住」，会加练'; $('hint').className='hint bad'; };
 
+// 模拟
 $('btnExamCheck').onclick=()=>{
   const it=ITEMS[cur]; const v=$('examInput').value.trim();
   if(!v){ $('examHint').textContent='请先输入'; $('examHint').className='hint bad'; return; }
@@ -313,23 +361,16 @@ $('btnExamCheck').onclick=()=>{
 };
 $('btnExamReveal').onclick=()=>{ fillAns('e', ITEMS[cur]); $('examAns').style.display='block'; };
 
+// 键盘
 document.addEventListener('keydown',e=>{
   const tag=(e.target.tagName||'').toLowerCase();
   if(tag==='input'||tag==='select') return;
-  if(e.key===' '||e.key==='n'||e.key==='N'||e.key==='ArrowRight'){ e.preventDefault(); const i=pick(); if(i>=0)show(i); }
+  if(e.key===' '||e.key==='n'||e.key==='N'||e.key==='ArrowRight'){ e.preventDefault(); next(); }
   else if(e.key==='ArrowLeft'){ e.preventDefault(); goBack(); }
   else if(e.key==='r'||e.key==='R'){ (mode==='exam'?$('btnExamReveal'):$('btnShowAns')).click(); }
 });
 
-(function(){
-  const pb=document.createElement('button'); pb.className='btn'; pb.textContent='← 上一张';
-  pb.onclick=()=>goBack();
-  document.querySelector('.toolbar').appendChild(pb);
-  const nb=document.createElement('button'); nb.className='btn primary'; nb.textContent='下一张 →';
-  nb.onclick=()=>{ const i=pick(); if(i>=0)show(i); };
-  document.querySelector('.toolbar').appendChild(nb);
-})();
-
+// 易混对比
 (function(){
   const box=$('diffBox');
   PAIRS.forEach(p=>{
@@ -343,8 +384,6 @@ document.addEventListener('keydown',e=>{
     box.appendChild(d);
   });
 })();
-
-$('img').onclick=()=>{ if(mode==='quick'||mode==='exam'){ const i=pick(); if(i>=0)show(i); } };
 
 resetSession();
 const first=pick(); if(first>=0) show(first);
