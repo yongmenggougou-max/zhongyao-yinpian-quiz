@@ -90,7 +90,7 @@ details.block summary{cursor:pointer;font-family:"STKaiti","KaiTi",serif;font-si
       · <b>快刷</b>：图和答案同屏，快速过一遍建立印象；<br>
       · <b>考前模拟</b>：只出图、答案藏起，自己默背后再翻。</p>
       <h4>快捷键</h4>
-      <p>空格 / N / → ：下一张　｜　← ：上一张（顺序、快刷模式）　｜　R ：显示答案</p>
+      <p>空格 / N / → ：下一张　｜　← ：上一张　｜　R ：显示答案</p>
       <h4>进度说明</h4>
       <p>学习进度存在<b>你自己的浏览器</b>里，换设备 / 换浏览器不会同步（各存各的，互不干扰）。</p>
       <h4>突击建议（1–2 天）</h4>
@@ -193,7 +193,7 @@ const LS = "yc_quiz_v2";
 let S = (()=>{try{const j=localStorage.getItem(LS);if(j)return JSON.parse(j);}catch(e){}return {wrong:{},streak:{},correct:0,seen:0,seenSet:{}};})();
 function save(){try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}}
 
-let mode='random', cur=-1, catIdx=0;
+let mode='random', cur=-1, catIdx=0, history=[];
 const order = ITEMS.map((_,i)=>i);
 
 function norm(s){return String(s||'').replace(/[\s\u3000·\.、，。]/g,'').toLowerCase();}
@@ -217,10 +217,12 @@ function pick(){
 }
 
 function renderStats(){ $('seen').textContent=S.seen; $('correct').textContent=S.correct; $('wrongCnt').textContent=wrongList().length; }
-function resetSession(){ S.seen=0; S.correct=0; S.seenSet={}; renderStats(); }
+function resetSession(){ S.seen=0; S.correct=0; S.seenSet={}; history=[]; renderStats(); }
+function goBack(){ if(history.length>1){ history.pop(); show(history[history.length-1], false); } }
 
-function show(i){
+function show(i, record){
   if(i<0){ if(mode==='wrong'){alert('暂无错题，先去随机抽查答错几道吧');} return; }
+  if(record!==false) history.push(i);
   cur=i;
   const it=ITEMS[i];
   $('img').src='images/item_'+String(i+1).padStart(2,'0')+'.jpg';
@@ -298,11 +300,14 @@ document.addEventListener('keydown',e=>{
   const tag=(e.target.tagName||'').toLowerCase();
   if(tag==='input'||tag==='select') return;
   if(e.key===' '||e.key==='n'||e.key==='N'||e.key==='ArrowRight'){ e.preventDefault(); const i=pick(); if(i>=0)show(i); }
-  else if(e.key==='ArrowLeft'){ if(mode==='order'||mode==='quick'){ cur=(cur<=0?59:cur-1); show(cur);} }
+  else if(e.key==='ArrowLeft'){ e.preventDefault(); goBack(); }
   else if(e.key==='r'||e.key==='R'){ (mode==='exam'?$('btnExamReveal'):$('btnShowAns')).click(); }
 });
 
 (function(){
+  const pb=document.createElement('button'); pb.className='btn'; pb.textContent='← 上一张';
+  pb.onclick=()=>goBack();
+  document.querySelector('.toolbar').appendChild(pb);
   const nb=document.createElement('button'); nb.className='btn primary'; nb.textContent='下一张 →';
   nb.onclick=()=>{ const i=pick(); if(i>=0)show(i); };
   document.querySelector('.toolbar').appendChild(nb);
