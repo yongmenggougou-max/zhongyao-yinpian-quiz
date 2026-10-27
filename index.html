@@ -101,7 +101,8 @@ details.block summary{cursor:pointer;font-family:"STKaiti","KaiTi",serif;font-si
   .card.img .imgbox{padding:4px;}
   .card.ans{flex:1 1 54%;}
   .nav{width:34px;height:34px;font-size:19px;}
-  .foot{display:none;}
+  .foot details.block{padding:6px 10px;margin-bottom:4px;}
+  .foot summary{font-size:13px;}
 }
 </style>
 </head>
@@ -296,7 +297,8 @@ function show(i, record){
 
   if(!S.seenSet[i]){ S.seenSet[i]=1; S.seen++; }
   renderStats(); save();
-  if(mode!=='quick' && mode!=='pure') $('guessInput').focus();
+  if(mode==='exam') $('examInput').focus();
+  else if(mode!=='quick' && mode!=='pure') $('guessInput').focus();
 }
 
 function fillAns(el, it){
@@ -325,7 +327,8 @@ document.querySelectorAll('[data-mode]').forEach(b=>{
   };
 });
 
-CATS.forEach(c=>{const o=document.createElement('option');o.textContent=c;$('catSel').appendChild(o);});
+const catCount={}; ITEMS.forEach(it=>catCount[it.category]=(catCount[it.category]||0)+1);
+CATS.forEach(c=>{const o=document.createElement('option');o.textContent=c+(catCount[c]===1?'（仅1味）':'');$('catSel').appendChild(o);});
 $('catSel').onchange=e=>{catIdx=e.target.selectedIndex; resetSession(); next();};
 
 // 翻页
